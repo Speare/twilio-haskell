@@ -107,6 +107,7 @@ data MessageStatus
   | Received
   | Delivered
   | Undelivered
+  | Unknown
   deriving Eq
 
 instance Show MessageStatus where
@@ -117,6 +118,7 @@ instance Show MessageStatus where
   show Received    = "received"
   show Delivered   = "delivered"
   show Undelivered = "undelivered"
+  show Unknown     = ""
 
 instance FromJSON MessageStatus where
   parseJSON (String "queued")      = return Queued
@@ -126,4 +128,5 @@ instance FromJSON MessageStatus where
   parseJSON (String "received")    = return Received
   parseJSON (String "delivered")   = return Delivered
   parseJSON (String "undelivered") = return Undelivered
+  parseJSON (String "")            = return Unknown
   parseJSON _ = mzero

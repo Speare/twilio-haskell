@@ -234,9 +234,9 @@ instance ToJSON UsageTriggerSID where
   toJSON = sidToJSON
 
 parseSID' :: (MonadPlus m, SID s) => Text -> Const (m s) s
-parseSID' sid =
+parseSID' sid = let hack ab' a b = case ab' of ('S', 'M') -> (a == 'S' || a == 'M') && (b == 'M'); _ -> (a, b) == ab' in
   case T.unpack sid of
-    a:b:_ -> runFlip $ (\ab' -> if (a, b) == ab' then return (makeSID sid) else mzero)
+    a:b:_ -> runFlip $ (\ab' -> if (hack ab' a b) then return (makeSID sid) else mzero)
                <$> Flip getPrefix
     _     -> Const mzero
 
